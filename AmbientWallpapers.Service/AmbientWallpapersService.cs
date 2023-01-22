@@ -82,7 +82,7 @@ namespace AmbientWallpapers.Service
             eventLog.WriteEntry($"AmbientWallpapers service started in {AppContext.BaseDirectory} directory", EventLogEntryType.Information, eventId++);
 
             timer = new Timer();
-            timer.Interval = 60000;
+            timer.Interval = 60 * 60 * 1000;
             timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
             timer.Start();
 

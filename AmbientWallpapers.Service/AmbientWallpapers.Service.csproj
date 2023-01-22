@@ -65,6 +65,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AmbientWallpapers.ImageTools\AmbientWallpapers.ImageTools.csproj">
+      <Project>{ae44af0d-a2a6-4d8b-b0c9-b5ca3b0c62dc}</Project>
+      <Name>AmbientWallpapers.ImageTools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AmbientWallpapers.WallpaperSetter\AmbientWallpapers.WallpaperSetter.csproj">
       <Project>{c8d401d8-27ee-456c-9a59-0acdff3c4e2f}</Project>
       <Name>AmbientWallpapers.WallpaperSetter</Name>

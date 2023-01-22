@@ -10,29 +10,17 @@ namespace AmbientWallpapers.ImageTools
 {
     public static class LightnessTools
     {
-        static double lumaObjective(Color pixel) => (0.2126 * pixel.R + 0.7152 * pixel.G + 0.0722 * pixel.B);
         static double lumaPerceived(Color pixel) => (0.299 * pixel.R + 0.587 * pixel.G + 0.114 * pixel.B);
-        static double lumaPerceivedSlow(Color pixel) => Math.Sqrt((0.299 * Math.Pow(pixel.R, 2) + 0.587 * Math.Pow(pixel.G, 2) + 0.114 * Math.Pow(pixel.B, 2)));
 
-        public enum FormulaType
-        {
-            lumaObjective,
-            lumaPerceived,
-            lumaPerceivedSlow
-        }
-
-        public static double CalculateAverageLightness(Bitmap bm, FormulaType formulaType, bool isPrecise)
+        public static double CalculateAverageLightness(Bitmap bm)
         {
             double lum = 0;
             var tmpBmp = new Bitmap(bm);
             var width = bm.Width;
             var height = bm.Height;
 
-            if (!isPrecise)
-            {
-                height = height / 10;
-                width = width / 10;
-            }
+            height = height / 10;
+            width = width / 10;
 
             for (int y = 0; y < height; y++)
             {
@@ -40,20 +28,7 @@ namespace AmbientWallpapers.ImageTools
                 {
                     var pxl = tmpBmp.GetPixel(x * 10, y * 10);
 
-                    switch (formulaType)
-                    {
-                        case FormulaType.lumaObjective:
-                            lum += lumaObjective(pxl);
-                            break;
-                        case FormulaType.lumaPerceived:
-                            lum += lumaPerceived(pxl);
-                            break;
-                        case FormulaType.lumaPerceivedSlow:
-                            lum += lumaPerceivedSlow(pxl);
-                            break;
-                        default:
-                            break;
-                    }
+                    lum += lumaPerceived(pxl);
                 }
             }
 
