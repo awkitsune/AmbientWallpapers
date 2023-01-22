@@ -3,9 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.33026.149
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers", "AmbientWallpapers\AmbientWallpapers.csproj", "{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.WallpaperSetter", "AmbientWallpapers.WallpaperSetter\AmbientWallpapers.WallpaperSetter.csproj", "{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.Service", "AmbientWallpapers.Service\AmbientWallpapers.Service.csproj", "{AFD0A8FC-327B-4C42-BF7E-0EABCBA149C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.ImageTools", "AmbientWallpapers.ImageTools\AmbientWallpapers.ImageTools.csproj", "{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.TestingApp", "AmbientWallpapers.TestingApp\AmbientWallpapers.TestingApp.csproj", "{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +17,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFD0A8FC-327B-4C42-BF7E-0EABCBA149C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFD0A8FC-327B-4C42-BF7E-0EABCBA149C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFD0A8FC-327B-4C42-BF7E-0EABCBA149C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFD0A8FC-327B-4C42-BF7E-0EABCBA149C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

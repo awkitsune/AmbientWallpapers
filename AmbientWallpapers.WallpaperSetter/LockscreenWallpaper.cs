@@ -15,7 +15,7 @@ namespace AmbientWallpapers.WallpaperSetter
                 Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
 
                 System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-                string tempPath = Path.Combine(System.IO.Path.GetDirectoryName(AppContext.BaseDirectory), "wallpaper_lock.bmp");
+                string tempPath = Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory), "wallpaper_lock.bmp");
                 img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
 
                 Registry.SetValue(REGISTRY_KEY, "LockScreenImageStatus", 1, RegistryValueKind.DWord);
