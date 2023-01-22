@@ -25,14 +25,14 @@ namespace AmbientWallpapers.WallpaperSetter
             Center
         }
 
-        public static string Set(Uri uri, Style style)
+        public static string Set(Uri uri, Style style = Style.Fill)
         {
             try
             {
                 Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
 
                 System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-                string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+                string tempPath = Path.Combine(AppContext.BaseDirectory, "wallpaper.bmp");
                 img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
 
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
