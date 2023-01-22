@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.33026.149
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers", "AmbientWallpapers\AmbientWallpapers.csproj", "{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.WallpaperSetter", "AmbientWallpapers.WallpaperSetter\AmbientWallpapers.WallpaperSetter.csproj", "{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7FB0DA0-C9DE-4B2A-89B2-4978FFF3EEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8D401D8-27EE-456C-9A59-0ACDFF3C4E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DF94C483-A102-4F8A-ADA8-F584D706DC49}
+	EndGlobalSection
+EndGlobal
