@@ -22,6 +22,7 @@ namespace AmbientWallpapers.TestingApp
                 $"\n" +
                 $"Enter option:");
             var option = Console.ReadLine();
+            Console.WriteLine();
 
             switch (option)
             {
@@ -61,27 +62,71 @@ namespace AmbientWallpapers.TestingApp
             Console.ReadKey();
         }
 
-        private static void installBothWallpapers()
+        private static void updateFileList()
         {
-            DirectoryInfo d = new DirectoryInfo(@"./images");
+            DirectoryInfo d = new DirectoryInfo("./images");
             List<FileInfo> files = d.GetFiles("*.png").ToList();
             files.AddRange(d.GetFiles("*.jpg").ToList());
             files.AddRange(d.GetFiles("*.jpeg").ToList());
 
             if (files.Count == 0)
             {
-                Console.WriteLine("No files in directory");
+                throw new FileNotFoundException($"No files in images directory {d.FullName}");
             }
             else
             {
-                var res = WallpaperSetter.DesktopWallpaper.Set(new Uri(files[0].FullName));
+                foreach (var item in files)
+                {
+                    if (!fileList.Exists(i => i.Name == item.Name))
+                    {
+                        fileList.Add(new ImageTools.ImageFile()
+                        {
+                            Path = item.FullName,
+                            Luminance = ImageTools.LightnessTools.CalculateAverageLightness(
+                                ImageTools.Tools.ConvertToBitmap(item.FullName)
+                                ),
+                            Name = item.Name
+                        });
+                    }
+                }
 
-                Console.WriteLine($"Done! {res}");
-                Console.ReadKey();
+                foreach (var item in fileList)
+                {
+                    if (!files.Exists(f => f.Name == item.Name))
+                    {
+                        fileList.Remove(item);
+                    }
+                }
+            }
+        }
+
+        private static void installBothWallpapers()
+        {
+            updateFileList();
+
+            var luma = WallpaperSetter.TimeToLuminance.LuminanceNow();
+
+            var delta = 0.0;
+
+            var matchingWallpapers = new List<ImageTools.ImageFile>();
+
+            while (matchingWallpapers.Count == 0)
+            {
+                delta += 0.05;
+                matchingWallpapers = fileList.Where(i => ApproxEquals(i.Luminance, luma, delta)).ToList();
             }
 
- 
+            var wallpaperId = new Random().Next(0, matchingWallpapers.Count - 1);
+            var wallpaperUri = new Uri(matchingWallpapers[wallpaperId].Path);
+
+            var response = WallpaperSetter.DesktopWallpaper.Set(wallpaperUri);
+
+            Console.WriteLine(response);
+            Console.ReadKey();
         }
+
+        private static bool ApproxEquals(double value, double referenceValue, double delta) =>
+            Math.Abs(value - referenceValue) < delta;
 
         private static void testSpeed()
         {

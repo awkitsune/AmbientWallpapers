@@ -7,15 +7,22 @@ namespace AmbientWallpapers.ImageTools
     {
         public static Bitmap ConvertToBitmap(string fileName)
         {
-            Bitmap bitmap;
-            using (Stream bmpStream = File.Open(fileName, FileMode.Open))
+            try
             {
-                Image image = Image.FromStream(bmpStream);
+                Bitmap bitmap;
+                using (Stream bmpStream = File.Open(fileName, FileMode.Open))
+                {
+                    Image image = Image.FromStream(bmpStream);
 
-                bitmap = new Bitmap(image);
+                    bitmap = new Bitmap(image);
 
+                }
+                return bitmap;
             }
-            return bitmap;
+            catch (System.Exception)
+            {
+                return new Bitmap(1, 1);
+            }
         }
 
     }

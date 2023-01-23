@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
@@ -18,8 +19,9 @@ namespace AmbientWallpapers.Service
         private EventLog eventLog;
         private Timer timer;
         private int eventId = 0;
+        private string imagesPath = Path.Combine(AppContext.BaseDirectory, "images\\");
 
-
+        List<ImageTools.ImageFile> imagesList = new List<ImageTools.ImageFile>();
 
         public enum ServiceState
         {
@@ -59,40 +61,141 @@ namespace AmbientWallpapers.Service
             }
             eventLog.Source = "AmbientWallpapers Service";
             eventLog.Log = "Main Log";
+        }
 
-            if (args.Length == 3)
+        private bool checkForExistance()
+        {
+            try
             {
+                if (!Directory.Exists(imagesPath))
+                {
+                    Directory.CreateDirectory(imagesPath);
+                } 
 
+                return true;
             }
-            else
+            catch
             {
-                eventLog.WriteEntry("AmbientWallpapers params should be provided in the next order:\n" +
-                    "setLockScreelWallpapers(y or n) pathToWallpapers(full path) changePeriod(in minutes)\n" +
-                    @"Example: y C:\\wallpapers 60 ");
+                return false;
             }
+            
         }
 
         protected override void OnStart(string[] args)
         {
-            ServiceStatus serviceStatus = new ServiceStatus();
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
-            serviceStatus.dwWaitHint = 100000;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            try
+            {
+                ServiceStatus serviceStatus = new ServiceStatus();
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_START_PENDING;
+                serviceStatus.dwWaitHint = 100000;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
-            eventLog.WriteEntry($"AmbientWallpapers service started in {AppContext.BaseDirectory} directory", EventLogEntryType.Information, eventId++);
+                if (checkForExistance())
+                {
+                    updateFileList();
+                    updateWallpaper();
+                }
+                else
+                {
+                    eventLog.WriteEntry($"AmbientWallpapers service failed to start in {AppContext.BaseDirectory} directory", EventLogEntryType.Information, eventId++);
+                    throw new FileNotFoundException("Check folder with files");
+                }
 
+                eventLog.WriteEntry($"AmbientWallpapers service started in {AppContext.BaseDirectory} directory", EventLogEntryType.Information, eventId++);
+
+                initTimer();
+
+                serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
+                SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+            }
+            catch (Exception err)
+            {
+                eventLog.WriteEntry(err.ToString(), EventLogEntryType.Error, eventId++);
+
+                this.Stop();
+            }
+        }
+
+        private void initTimer()
+        {
             timer = new Timer();
+#if DEBUG
+            timer.Interval = 10 * 1000;
+#else
             timer.Interval = 60 * 60 * 1000;
+#endif
             timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
             timer.Start();
+        }
 
-            serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
-            SetServiceStatus(this.ServiceHandle, ref serviceStatus);
+        private void updateWallpaper()
+        {
+            var luma = WallpaperSetter.TimeToLuminance.LuminanceNow();
+            eventLog.WriteEntry($"Current luma is {luma}", EventLogEntryType.Information, eventId++);
+
+            var delta = 0.0;
+
+            var matchingWallpapers = new List<ImageTools.ImageFile>();
+
+            while (matchingWallpapers.Count == 0)
+            {
+                delta += 0.05;
+                matchingWallpapers = imagesList.Where(i => ApproxEquals(i.Luminance, luma, delta)).ToList();
+            }
+
+            var wallpaperId = new Random().Next(0, matchingWallpapers.Count - 1);
+            var wallpaperUri = new Uri(matchingWallpapers[wallpaperId].Path);
+
+            var response = WallpaperSetter.DesktopWallpaper.Set(wallpaperUri);
+            eventLog.WriteEntry($"Setted up wallpaper with result: {response}", EventLogEntryType.Information, eventId++);
+        }
+
+        private bool ApproxEquals(double value, double referenceValue, double delta) =>
+            Math.Abs(value - referenceValue) < delta;
+
+        private void updateFileList()
+        {
+            DirectoryInfo d = new DirectoryInfo(imagesPath);
+            List<FileInfo> files = d.GetFiles("*.png").ToList();
+            files.AddRange(d.GetFiles("*.jpg").ToList());
+            files.AddRange(d.GetFiles("*.jpeg").ToList());
+
+            if (files.Count == 0)
+            {
+                throw new FileNotFoundException($"No files in images directory {d.FullName}");
+            }
+            else
+            {
+                foreach (var item in files)
+                {
+                    if (!imagesList.Exists(i => i.Name == item.Name) )
+                    {
+                        imagesList.Add(new ImageTools.ImageFile()
+                        {
+                            Path = item.FullName,
+                            Luminance = ImageTools.LightnessTools.CalculateAverageLightness(
+                                ImageTools.Tools.ConvertToBitmap(item.FullName)
+                                ),
+                            Name = item.Name
+                        });
+                    }
+                }
+
+                foreach (var item in imagesList)
+                {
+                    if (!files.Exists(f => f.Name == item.Name))
+                    {
+                        imagesList.Remove(item);
+                    }
+                }
+            }
         }
 
         private void OnTimer(object sender, ElapsedEventArgs e)
         {
-            eventLog.WriteEntry("Monitoring time", EventLogEntryType.Information, eventId++);
+            eventLog.WriteEntry("Setting wallpaper...", EventLogEntryType.Information, eventId++);
+            updateFileList();
+            updateWallpaper();
         }
 
         protected override void OnStop()
@@ -131,10 +234,7 @@ namespace AmbientWallpapers.Service
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
 
             eventLog.WriteEntry("AmbientWallpapers service starting", EventLogEntryType.Information, eventId++);
-            timer = new Timer();
-            timer.Interval = 60000;
-            timer.Elapsed += new ElapsedEventHandler(this.OnTimer);
-            timer.Start();
+            initTimer();
 
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);

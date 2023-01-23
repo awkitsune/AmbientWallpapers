@@ -8,6 +8,8 @@ namespace AmbientWallpapers.WallpaperSetter
 {
     public class DesktopWallpaper
     {
+        static int currentWall = 0;
+
         const int SPI_SETDESKWALLPAPER = 20;
         const int SPIF_UPDATEINIFILE = 0x01;
         const int SPIF_SENDWININICHANGE = 0x02;
@@ -29,11 +31,17 @@ namespace AmbientWallpapers.WallpaperSetter
         {
             try
             {
+                if (File.Exists(Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall - 1}.bmp")))
+                {
+                    File.Delete(Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall - 1}.bmp"));
+                }
+
                 Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
 
                 System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-                string tempPath = Path.Combine(AppContext.BaseDirectory, "wallpaper.bmp");
+                string tempPath = Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall}.bmp");
                 img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
+                currentWall++;
 
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
 
@@ -44,7 +52,7 @@ namespace AmbientWallpapers.WallpaperSetter
                 }
                 if (style == Style.Span)
                 {
-                    if (Double.Parse(
+                    if (double.Parse(
                         $"{Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor >= 2}", 
                         CultureInfo.InvariantCulture) >= 6.2)
                     {
