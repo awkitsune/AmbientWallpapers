@@ -11,6 +11,7 @@ namespace AmbientWallpapers.App
 {
     class TrayApplicationContext : ApplicationContext
     {
+        private double lastLimePeriod = Properties.Settings.Default.WallpaperChangeTimeMin;
         private string imagesPath = Path.Combine(AppContext.BaseDirectory, "images\\");
 
         private NotifyIcon notifyIcon = new NotifyIcon();
@@ -36,15 +37,17 @@ namespace AmbientWallpapers.App
                 System.Reflection.Assembly.GetExecutingAssembly().Location
                 );
             notifyIcon.ContextMenu = contextMenu;
+            notifyIcon.DoubleClick += updateWallpaper;
+
             notifyIcon.Text = "Ambient Wallpapers is starting";
             notifyIcon.Visible = true;
+
             notifyIcon.ShowBalloonTip(
                 2000, 
                 "Ambient Wallpapers",
                 "Ambient Wallpapers is starting",
                 ToolTipIcon.Info);
-
-
+            
             wallpaperManager = new WallpaperManager(imagesPath);
 
             InitTimer();
@@ -59,23 +62,35 @@ namespace AmbientWallpapers.App
                 60 * 1000);
         }
 
-        private void OnTimer(object notifyIcon)
+        private void OnTimer(object obj)
         {
-            (notifyIcon as NotifyIcon).ShowBalloonTip(2000, "AmbientWallpapers", "Meow", ToolTipIcon.None);
-            (notifyIcon as NotifyIcon).ContextMenu.MenuItems[0].Text = (notifyIcon as NotifyIcon).Text =
+            notifyIcon.ContextMenu.MenuItems[0].Text = notifyIcon.Text =
                 $"Luminance: {WallpaperSetter.TimeToLuminance.LuminanceNow()}";
+            if (lastLimePeriod != Properties.Settings.Default.WallpaperChangeTimeMin)
+            {
+                wallpaperManager.InitTimer(Properties.Settings.Default.WallpaperChangeTimeMin);
+            }
         }
 
         private void updateWallpaper(object sender, EventArgs e)
         {
             wallpaperManager.UpdateWallpaper();
+            wallpaperManager.InitTimer(Properties.Settings.Default.WallpaperChangeTimeMin);
         }
 
         private void closeApp(object sender, EventArgs e)
         {
+            Application.Exit();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
             wallpaperManager.Stop();
             iconUpdateTimer.Dispose();
-            Application.Exit();
+            notifyIcon.Visible = false;
+            notifyIcon.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }

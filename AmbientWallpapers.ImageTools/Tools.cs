@@ -19,7 +19,6 @@ namespace AmbientWallpapers.ImageTools
                             Image image = Image.FromStream(bmpStream);
 
                             bitmap = new Bitmap(image);
-
                         }
                         return bitmap;
                     }

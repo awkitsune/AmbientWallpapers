@@ -31,9 +31,9 @@ namespace AmbientWallpapers.ImageTools
                 }
             }
 
-            var avgLum = lum / (width * height);
+            bm.Dispose();
 
-            return avgLum / 255.0;
+            return lum / (width * height) / 255.0;
         }
 
     }

@@ -21,7 +21,9 @@ namespace AmbientWallpapers.App
                 if (checkForExistance()) UpdateFileList();
                 else throw new FileNotFoundException("Check folder with files");
 
-                InitTimer();
+                InitTimer(Properties.Settings.Default.WallpaperChangeTimeMin);
+
+                System.Threading.Thread.Sleep(10 * 1000);
             }
             catch (Exception err)
             {
@@ -39,32 +41,23 @@ namespace AmbientWallpapers.App
             catch { return false; }
         }
 
-        public void InitTimer()
+        public void InitTimer(double periodMinutes)
         {
             timer = new Timer();
-#if DEBUG
-            timer.Interval = 60 * 1000;
-#else
-            timer.Interval = 60 * 60 * 1000;
-#endif
+            timer.Interval = (int)(periodMinutes * 60 * 1000);
             timer.Elapsed += new ElapsedEventHandler(OnTimer);
             timer.Start();
-
-            UpdateWallpaper();
         }
 
         public void UpdateWallpaper()
         {
             var luma = WallpaperSetter.TimeToLuminance.LuminanceNow();
 
-            var delta = 0.0;
-
             var matchingWallpapers = new List<ImageTools.ImageFile>();
 
-            while (matchingWallpapers.Count == 0)
+            for (double delta = 0.0; delta <= 1.0; delta += 0.05)
             {
-                delta += 0.05;
-                matchingWallpapers = imagesList.Where(i => ApproxEquals(i.Luminance, luma, delta)).ToList();
+                matchingWallpapers = imagesList.Where(i => Math.Abs(i.Luminance - luma) < delta).ToList();
             }
 
             var wallpaperId = new Random().Next(0, matchingWallpapers.Count - 1);
@@ -72,9 +65,6 @@ namespace AmbientWallpapers.App
 
             var response = WallpaperSetter.DesktopWallpaper.Set(wallpaperUri);
         }
-
-        private bool ApproxEquals(double value, double referenceValue, double delta) =>
-            Math.Abs(value - referenceValue) < delta;
 
         public async void UpdateFileList()
         {
@@ -129,7 +119,6 @@ namespace AmbientWallpapers.App
             timer.Stop();
             timer.Dispose();
             imagesList.Clear();
-            GC.Collect();
         }
     }
 }
