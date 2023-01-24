@@ -8,8 +8,6 @@ namespace AmbientWallpapers.WallpaperSetter
 {
     public class DesktopWallpaper
     {
-        static int currentWall = 0;
-
         const int SPI_SETDESKWALLPAPER = 20;
         const int SPIF_UPDATEINIFILE = 0x01;
         const int SPIF_SENDWININICHANGE = 0x02;
@@ -29,19 +27,17 @@ namespace AmbientWallpapers.WallpaperSetter
 
         public static string Set(Uri uri, Style style = Style.Fill)
         {
+            var path = uri.LocalPath;
             try
             {
-                if (File.Exists(Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall - 1}.bmp")))
+                if (!Directory.Exists(Path.Combine(AppContext.BaseDirectory, $"temp")))
                 {
-                    File.Delete(Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall - 1}.bmp"));
+                    Directory.CreateDirectory(Path.Combine(AppContext.BaseDirectory, $"temp"));
                 }
 
-                Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
+                string tempPath = Path.Combine(AppContext.BaseDirectory, $"temp\\wallpaper{Path.GetExtension(path)}");
 
-                System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-                string tempPath = Path.Combine(AppContext.BaseDirectory, $"wallpaper{currentWall}.bmp");
-                img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
-                currentWall++;
+                File.Copy(path, tempPath, true);
 
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
 
@@ -53,7 +49,7 @@ namespace AmbientWallpapers.WallpaperSetter
                 if (style == Style.Span)
                 {
                     if (double.Parse(
-                        $"{Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor >= 2}", 
+                        $"{Environment.OSVersion.Version.Major}.{Environment.OSVersion.Version.Minor}", 
                         CultureInfo.InvariantCulture) >= 6.2)
                     {
                         key.SetValue(@"WallpaperStyle", 22.ToString());
@@ -90,7 +86,7 @@ namespace AmbientWallpapers.WallpaperSetter
                     tempPath,
                     SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 
-                return "";
+                return tempPath;
             }
             catch (Exception err)
             {
