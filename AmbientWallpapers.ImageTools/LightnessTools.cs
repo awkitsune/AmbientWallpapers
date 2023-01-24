@@ -15,7 +15,6 @@ namespace AmbientWallpapers.ImageTools
         public static double CalculateAverageLightness(Bitmap bm)
         {
             double lum = 0;
-            var tmpBmp = new Bitmap(bm);
             var width = bm.Width;
             var height = bm.Height;
 
@@ -26,7 +25,7 @@ namespace AmbientWallpapers.ImageTools
             {
                 for (int x = 0; x < width; x++)
                 {
-                    var pxl = tmpBmp.GetPixel(x * 10, y * 10);
+                    var pxl = bm.GetPixel(x * 10, y * 10);
 
                     lum += lumaPerceived(pxl);
                 }

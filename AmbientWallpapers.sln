@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.Wallpaper
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.ImageTools", "AmbientWallpapers.ImageTools\AmbientWallpapers.ImageTools.csproj", "{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.TestingApp", "AmbientWallpapers.TestingApp\AmbientWallpapers.TestingApp.csproj", "{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmbientWallpapers.App", "AmbientWallpapers.App\AmbientWallpapers.App.csproj", "{B1930239-F9DE-460F-A5E2-5AD2D77E417F}"
 EndProject
 Global
@@ -25,10 +23,6 @@ Global
 		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE44AF0D-A2A6-4D8B-B0C9-B5CA3B0C62DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6667AED3-9E23-4EBB-A1D2-EB4C1489FD06}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B1930239-F9DE-460F-A5E2-5AD2D77E417F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B1930239-F9DE-460F-A5E2-5AD2D77E417F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B1930239-F9DE-460F-A5E2-5AD2D77E417F}.Release|Any CPU.ActiveCfg = Release|Any CPU
